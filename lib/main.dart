@@ -28,7 +28,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<BeerProvider>(context, listen: false).getBeers();
-    // if (beers) {
     return Consumer<BeerProvider>(builder: (context, value, child) {
       if (value.initialized) {
         return Scaffold(
