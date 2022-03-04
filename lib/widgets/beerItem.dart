@@ -16,40 +16,18 @@ class BeerItem extends StatelessWidget {
         beer.imageUrl,
         fit: BoxFit.contain,
       ),
-      title: RichText(
-          text: TextSpan(
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              text: beer.name)),
-      subtitle: Column(children: [
-        Text(beer.description),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 5, 10, 5),
-              child: RichText(
-                text: TextSpan(children: [
-                  TextSpan(text: "Vol : "),
-                  TextSpan(
-                      text: beer.abv,
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                ]),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 5, 10, 5),
-              child: RichText(
-                text: TextSpan(children: [
-                  TextSpan(text: "Ibu : "),
-                  TextSpan(
-                      text: beer.ibu,
-                      style: TextStyle(fontWeight: FontWeight.bold))
-                ]),
-              ),
-            )
-          ],
-        ),
-      ]),
+      title: Text(beer.name),
+      subtitle: Column(
+        children: [
+          Text(beer.description),
+          Text(
+            "Vol : ${beer.abv} - Ibu : ${beer.ibu}",
+            textAlign: TextAlign.left,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )
+        ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+      ),
       dense: false,
     );
   }

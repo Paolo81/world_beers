@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:world_beers/models/beer.dart';
 import '../providers/beer_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -17,14 +18,28 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'World Beers',
           theme: ThemeData(
-            primarySwatch: Colors.brown,
-          ),
+              appBarTheme: AppBarTheme(
+                  // backgroundColor: Colors.blue,
+                  foregroundColor:
+                      Colors.amber //here you can give the text color
+                  ),
+              colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.grey)
+                  .copyWith(secondary: Colors.orange)),
           home: HomePage(),
         ));
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String filterString = "";
+
+  void filterBeers() {}
+
   @override
   Widget build(BuildContext context) {
     Provider.of<BeerProvider>(context, listen: false).getBeers();
@@ -32,12 +47,32 @@ class HomePage extends StatelessWidget {
       if (value.initialized) {
         return Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.black38,
-              titleTextStyle: TextStyle(color: Colors.amber),
               title: Text("World Beers"),
             ),
-            body: ListView(
-              children: [...value.beers.map((beer) => BeerItem(beer))],
+            body: Container(
+              child: Column(
+                children: [
+                  Container(
+                      padding: EdgeInsets.all(20),
+                      child: TextField(
+                          onChanged: (String val) => setState(() {
+                                filterString = val;
+                              }),
+                          decoration:
+                              InputDecoration(prefixIcon: Icon(Icons.search)))),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        ...value.beers
+                            .where((beer) => beer.name
+                                .toLowerCase()
+                                .contains(filterString.toLowerCase()))
+                            .map((beer) => BeerItem(beer))
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ));
       } else {
         return const Center(child: CircularProgressIndicator());
