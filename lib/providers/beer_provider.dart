@@ -15,17 +15,12 @@ class BeerProvider with ChangeNotifier {
   Future<void> getBeers() async {
     final response = await http.get(
       Uri.parse('https://api.punkapi.com/v2/beers'),
-      // headers: <String, String>{
-      //   'Content-Type': 'application/json',
-      //   "Accept": "application/json"
-      // },
     );
     if (response.statusCode == 200) {
       try {
         final responseBeers = jsonDecode(response.body) as List;
         _initialized = true;
         _beers = [...responseBeers.map((beer) => Beer.fromJson(beer))];
-        // print(_beers);
       } catch (e) {
         _initialized = true;
         print(e);
@@ -35,5 +30,9 @@ class BeerProvider with ChangeNotifier {
       throw Exception('Failed to load beers');
     }
     notifyListeners();
+  }
+
+  Beer findById(String id) {
+    return _beers.firstWhere((beer) => beer.id.toString() == id);
   }
 }

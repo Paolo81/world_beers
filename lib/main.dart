@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:world_beers/models/beer.dart';
 import '../providers/beer_provider.dart';
 import 'package:provider/provider.dart';
-
-import 'widgets/beerItem.dart';
+import 'screens/beer_detail.dart';
+import 'utils/palette.dart';
+import 'widgets/beer_item.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,19 +13,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => BeerProvider(),
+        create: (ctx) => BeerProvider(),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'World Beers',
           theme: ThemeData(
-              appBarTheme: AppBarTheme(
-                  // backgroundColor: Colors.blue,
-                  foregroundColor:
-                      Colors.amber //here you can give the text color
-                  ),
-              colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.grey)
-                  .copyWith(secondary: Colors.orange)),
+              appBarTheme: AppBarTheme(foregroundColor: Colors.amber),
+              colorScheme:
+                  ColorScheme.fromSwatch(primarySwatch: Palette.darkGrey)
+                      .copyWith(secondary: Palette.orange)),
           home: HomePage(),
+          routes: {BeerDetail.routeName: (ctx) => BeerDetail()},
         ));
   }
 }
@@ -38,8 +36,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String filterString = "";
 
-  void filterBeers() {}
-
   @override
   Widget build(BuildContext context) {
     Provider.of<BeerProvider>(context, listen: false).getBeers();
@@ -49,30 +45,28 @@ class _HomePageState extends State<HomePage> {
             appBar: AppBar(
               title: Text("World Beers"),
             ),
-            body: Container(
-              child: Column(
-                children: [
-                  Container(
-                      padding: EdgeInsets.all(20),
-                      child: TextField(
-                          onChanged: (String val) => setState(() {
-                                filterString = val;
-                              }),
-                          decoration:
-                              InputDecoration(prefixIcon: Icon(Icons.search)))),
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        ...value.beers
-                            .where((beer) => beer.name
-                                .toLowerCase()
-                                .contains(filterString.toLowerCase()))
-                            .map((beer) => BeerItem(beer))
-                      ],
-                    ),
-                  )
-                ],
-              ),
+            body: Column(
+              children: [
+                Container(
+                    padding: EdgeInsets.all(20),
+                    child: TextField(
+                        onChanged: (String val) => setState(() {
+                              filterString = val;
+                            }),
+                        decoration:
+                            InputDecoration(prefixIcon: Icon(Icons.search)))),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      ...value.beers
+                          .where((beer) => beer.name
+                              .toLowerCase()
+                              .contains(filterString.toLowerCase()))
+                          .map((beer) => BeerItem(beer))
+                    ],
+                  ),
+                )
+              ],
             ));
       } else {
         return const Center(child: CircularProgressIndicator());
